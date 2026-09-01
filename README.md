@@ -90,6 +90,34 @@ src/
 └── Main.java
 ```
 
+## 📸 Screenshots
+
+Below are some screenshots of the application in action.
+
+<table>
+  <tr>
+    <td align="center">
+      <b>👤 Account Creation</b><br><br>
+      <img src="screenshots/account-creation.png" width="450">
+    </td>
+    <td align="center">
+      <b>🏦 Bank Management Dashboard</b><br><br>
+      <img src="screenshots/dashboard.png" width="450">
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <b>📋 Account Details</b><br><br>
+      <img src="screenshots/account-details.png" width="450">
+    </td>
+    <td align="center">
+      <b>💰 Deposit Money</b><br><br>
+      <img src="screenshots/deposit.png" width="450">
+    </td>
+  </tr>
+</table>
+
 ### 📦 Model
 
 `Account.java`
