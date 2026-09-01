@@ -141,10 +141,27 @@ public class Dashboard {
         System.out.println("========================================");
         System.out.println("Receivers Account Number: ");
         int receiverAccountNo = scanner.nextInt();
-        System.out.println("Enter Amount: ");
-        int amount = scanner.nextInt();
-        if(bankService.transferMoney(account.getAccountNumber(),receiverAccountNo,amount)){
-            account.setBalance(account.getBalance()-amount);
+        Account receiverAccount = accountDAO.findAccountByNumber(receiverAccountNo);
+        if( receiverAccount != null){
+            System.out.println("\n====================================");
+            System.out.println("          ACCOUNT DETAILS");
+            System.out.println("====================================");
+            System.out.println("Account ID      : " + receiverAccount.getId());
+            System.out.println("Account Number  : " + receiverAccount.getAccountNumber());
+            System.out.println("Holder Name     : " + receiverAccount.getAccountHolderName());
+            System.out.println("====================================");
+            System.out.println();
+            System.out.println("Confirm Account : Press Y/N");
+            if(scanner.next().equalsIgnoreCase("Y")){
+                System.out.println("Enter amount: ");
+                double amount = scanner.nextDouble();
+                if(bankService.transferMoney(account.getAccountNumber(),receiverAccountNo,amount)){
+                    account.setBalance(account.getBalance()-amount);
+                }
+            }
+        }else {
+            System.out.println("Account not found");
+
         }
 
     }
