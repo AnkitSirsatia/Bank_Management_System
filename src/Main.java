@@ -21,7 +21,9 @@ void main() {
                     }
                     break;
                 case 2:
-                    dashboard.createAccount();
+                    if(!dashboard.createAccount()){
+                        System.out.println("Invalid email entered");
+                    }
                     break;
                 case 3:
                     System.out.println("Exiting...");

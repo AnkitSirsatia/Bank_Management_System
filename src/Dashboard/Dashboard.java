@@ -3,6 +3,7 @@ package Dashboard;
 import DAO.AccountDAO;
 import Model.Account;
 import Service.BankService;
+import Util.EmailVerify;
 import Util.PasswordUtil;
 
 import java.util.Scanner;
@@ -32,7 +33,7 @@ public class Dashboard {
         return false;
     }
 
-    public void createAccount(){
+    public boolean createAccount(){
         System.out.println("\n========================================");
         System.out.println("          CREATE NEW ACCOUNT");
         System.out.println("========================================");
@@ -42,12 +43,18 @@ public class Dashboard {
 
         System.out.print("Enter Email : ");
         String createEmail = scanner.nextLine();
+        if(EmailVerify.Email_Verify(createEmail)){
 
-        System.out.print("Create Password : ");
-        String createPassword = scanner.nextLine();
+            System.out.print("Create Password : ");
+            String createPassword = scanner.nextLine();
 
-        System.out.println("========================================");
-        bankService.registerAccount(createAccountHolderName, createEmail, createPassword);
+            System.out.println("========================================");
+            bankService.registerAccount(createAccountHolderName, createEmail, createPassword);
+        }else {
+            return false;
+        }
+
+        return true;
     }
 
     public void withdraw(){

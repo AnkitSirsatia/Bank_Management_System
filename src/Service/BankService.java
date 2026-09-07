@@ -3,6 +3,7 @@ package Service;
 import DAO.AccountDAO;
 import Model.Account;
 import Util.ConnectionManager;
+import Util.EmailVerify;
 import Util.NumberGenerator;
 import Util.PasswordUtil;
 
@@ -215,10 +216,14 @@ public class BankService {
                         int accountNumb = scanner.nextInt();
                         System.out.println("Enter Email Id: ");
                         String email = scanner.next();
-                        if(forgotPassword(accountNumb,email)) {
-                            System.out.println("Password Re-set successfully");
+                        if(EmailVerify.Email_Verify(email)){
+                            if(forgotPassword(accountNumb,email)) {
+                                System.out.println("Password Re-set successfully");
+                            }
+                            return false;
+                        }else {
+                            System.out.println("Invalid email entered");
                         }
-                        return false;
                     }else{
                         System.out.println("Enter Valid choice");
                     }
