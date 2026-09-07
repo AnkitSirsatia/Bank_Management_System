@@ -1,22 +1,5 @@
 package Service;
 
-// Business logic-
-
-/*BankService
-registerAccount()
-login()
-getAccountDetails()
-getBalance()
-deposit()
-withdraw()
-transfer()
-getTransactionHistory()
-updateAccount()
-closeAccount()
-
- */
-
-
 import DAO.AccountDAO;
 import Model.Account;
 import Util.ConnectionManager;
@@ -30,10 +13,11 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class BankService {
-    private final AccountDAO accountDAO = new AccountDAO();
+    private final AccountDAO accountDAO;
     private final Scanner scanner;
-    public BankService(Scanner scanner){
+    public BankService(Scanner scanner,AccountDAO accountDAO){
         this.scanner=scanner;
+        this.accountDAO = accountDAO;
     }
 
     public boolean registerAccount(String accountHolderName, String email, String password){
@@ -133,7 +117,6 @@ public class BankService {
                 connection.rollback();
                 return false;
             }
-
             sender.setDouble(1,amount);
             sender.setInt(2,senderAccountNo);
             receiver.setDouble(1,amount);

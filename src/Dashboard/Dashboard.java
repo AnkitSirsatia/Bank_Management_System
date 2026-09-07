@@ -9,13 +9,14 @@ import java.util.Scanner;
 
 public class Dashboard {
     private final  BankService bankService;
-    private final AccountDAO  accountDAO = new AccountDAO();
+    private final AccountDAO  accountDAO;
     private Account account;
     private final Scanner scanner;
 
-    public Dashboard(BankService bankService,Scanner scanner){
+    public Dashboard(BankService bankService,Scanner scanner,AccountDAO accountDAO){
         this.bankService=bankService;
         this.scanner = scanner;
+        this.accountDAO = accountDAO;
     }
 
 
