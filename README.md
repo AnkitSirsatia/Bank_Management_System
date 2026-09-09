@@ -1,83 +1,127 @@
 # 🏦 Bank Management System
 
-A **console-based Bank Management System** built with **Java, JDBC, and MySQL**.
-The project demonstrates core backend development concepts such as **OOP, DAO pattern, Service Layer, database transactions, password hashing, validation, and CRUD operations**.
+A **console-based Bank Management System** built using **Java, JDBC, and MySQL**.
+
+The project is designed to demonstrate practical backend development concepts including **Object-Oriented Programming, layered architecture, DAO pattern, Service Layer, JDBC, database transactions, password hashing, input validation, and CRUD operations**.
+
+---
 
 ## 🚀 Features
 
 * 👤 Create a new bank account
 * 🔐 Secure password hashing using BCrypt
-* 🔑 User login authentication
+* 🔑 User authentication and login
 * 💰 Check account balance
 * ➕ Deposit money
 * ➖ Withdraw money
 * 💸 Transfer money between accounts
+* 📋 View transaction history
 * 👤 View account details
-* ✏️ Update account name
+* ✏️ Update account information
 * 📧 Update account email
-* 🔑 Reset/change password
+* 🔑 Change/reset password
 * 🗑️ Close bank account
-* 🔄 Database transaction handling using `commit()` and `rollback()`
+* 🔄 Transaction handling using `COMMIT` and `ROLLBACK`
 * 🔒 Database credentials loaded through environment variables
+* 📧 Email format validation
+* 🆔 Automatic account number generation
+* 🧾 Transaction record generation for banking operations
 
-## 🛠️ Technologies Used
+---
+
+# 🛠️ Technologies Used
 
 | Technology | Purpose                 |
 | ---------- | ----------------------- |
-| Java       | Application development |
-| JDBC       | Database connectivity   |
-| MySQL      | Data storage            |
-| BCrypt     | Password hashing        |
-| Git        | Version control         |
-| GitHub     | Source code hosting     |
+| **Java**   | Application development |
+| **JDBC**   | Database connectivity   |
+| **MySQL**  | Relational database     |
+| **BCrypt** | Password hashing        |
+| **Git**    | Version control         |
+| **GitHub** | Source code hosting     |
 
-## 🏗️ Project Architecture
+---
 
-The project follows a layered architecture to separate responsibilities.
+# 🏗️ Architecture
+
+The application follows a **layered architecture** to separate user interaction, business logic, and database operations.
 
 ```text
-                    ┌─────────────────┐
-                    │     User        │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │   Dashboard     │
-                    │   (UI Layer)    │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │  BankService    │
-                    │ (Business Logic)│
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │   AccountDAO    │
-                    │  (Data Access)  │
-                    └────────┬────────┘
-                             │
-                             ▼
-                    ┌─────────────────┐
-                    │     MySQL       │
-                    │    Database     │
-                    └─────────────────┘
+                    ┌─────────────────────┐
+                    │        User         │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │      Dashboard      │
+                    │      UI Layer       │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │     BankService     │
+                    │   Business Logic    │
+                    └──────────┬──────────┘
+                               │
+                 ┌─────────────┴─────────────┐
+                 │                           │
+                 ▼                           ▼
+        ┌─────────────────┐        ┌─────────────────┐
+        │   AccountDAO    │        │ TransactionDAO  │
+        │   Data Access   │        │   Data Access   │
+        └────────┬────────┘        └────────┬────────┘
+                 │                          │
+                 └────────────┬─────────────┘
+                              │
+                              ▼
+                    ┌─────────────────────┐
+                    │        MySQL        │
+                    │      Database       │
+                    └─────────────────────┘
 ```
 
-## 📂 Project Structure
+### Architecture Layers
+
+**Dashboard**
+
+* Handles console-based user interaction.
+* Displays menus and collects user input.
+
+**Service Layer**
+
+* Contains business logic.
+* Validates operations before interacting with the database.
+
+**DAO Layer**
+
+* Handles database operations.
+* Uses JDBC to execute SQL queries.
+
+**Model Layer**
+
+* Represents application entities such as accounts and transactions.
+
+**Utility Layer**
+
+* Provides reusable functionality such as database connections, password hashing, account-number generation, and validation.
+
+---
+
+# 📂 Project Structure
 
 ```text
 src/
 │
 ├── DAO/
-│   └── AccountDAO.java
+│   ├── AccountDAO.java
+│   └── TransactionDAO.java
 │
 ├── Dashboard/
 │   └── Dashboard.java
 │
 ├── Model/
-│   └── Account.java
+│   ├── Account.java
+│   └── Transaction.java
 │
 ├── Service/
 │   └── BankService.java
@@ -90,130 +134,110 @@ src/
 └── Main.java
 ```
 
-## 📸 Screenshots
+---
 
-Below are some screenshots of the application in action.
+# 💳 Banking Operations
 
-<table>
-  <tr>
-    <td align="center">
-      <b>👤 Account Creation</b><br><br>
-      <img src="screenshots/account-creation.png" width="450">
-    </td>
-    <td align="center">
-      <b>🏦 Bank Management Dashboard</b><br><br>
-      <img src="screenshots/dashboard.png" width="450">
-    </td>
-  </tr>
+## 👤 Account Management
 
-  <tr>
-    <td align="center">
-      <b>📋 Account Details</b><br><br>
-      <img src="screenshots/account-details.png" width="450">
-    </td>
-    <td align="center">
-      <b>💰 Deposit Money</b><br><br>
-      <img src="screenshots/deposit.png" width="450">
-    </td>
-  </tr>
-</table>
+Users can:
 
-### 📦 Model
-
-`Account.java`
-
-Represents the account entity and contains account-related data such as:
-
-* Account ID
-* Account number
-* Account holder name
-* Email
-* Password
-* Balance
-
-### 🗄️ DAO Layer
-
-`AccountDAO.java`
-
-Responsible for communicating with the MySQL database.
-
-Examples of database operations:
-
-```text
-Create Account
-Find Account
-Update Balance
-Update Account Information
-Delete Account
-Reset Password
-```
-
-### ⚙️ Service Layer
-
-`BankService.java`
-
-Contains the application's business logic.
-
-Examples:
-
-```text
-Register Account
-Login
-Deposit
-Withdraw
-Transfer Money
-Get Account Details
-Update Account
-Close Account
-Reset Password
-```
-
-### 🖥️ Dashboard
-
-`Dashboard.java`
-
-Handles user interaction through the console and provides menus for different banking operations.
-
-### 🔧 Utility Classes
-
-#### `ConnectionManager.java`
-
-Creates JDBC connections to the MySQL database.
-
-Database credentials are read from environment variables instead of being hardcoded.
-
-#### `PasswordUtil.java`
-
-Handles password hashing and verification using BCrypt.
-
-#### `NumberGenerator.java`
-
-Generates account numbers for newly created accounts.
+* Create an account
+* Login
+* View account details
+* Update account name
+* Update email
+* Change password
+* Close their account
 
 ---
 
-# 💸 Money Transfer & Database Transactions
+## 💰 Deposit
 
-The money transfer operation uses a database transaction.
-
-The basic flow is:
+Users can deposit money into their account.
 
 ```text
-Start Transaction
-       │
-       ▼
-Debit sender
-       │
-       ▼
-Credit receiver
-       │
-       ▼
-Both operations successful?
-      / \
-    YES  NO
-     │    │
-     ▼    ▼
-  COMMIT ROLLBACK
+User
+ │
+ ▼
+Enter Amount
+ │
+ ▼
+Validate Amount
+ │
+ ▼
+Update Account Balance
+ │
+ ▼
+Create Transaction Record
+ │
+ ▼
+Display Updated Balance
+```
+
+---
+
+## 💸 Withdrawal
+
+The application validates the withdrawal amount and checks whether the account has sufficient balance.
+
+```text
+Enter Amount
+     │
+     ▼
+Validate Amount
+     │
+     ▼
+Check Balance
+     │
+ ┌───┴────┐
+ │        │
+Enough   Insufficient
+ │        │
+ ▼        ▼
+Withdraw  Reject
+ │
+ ▼
+Create Transaction Record
+```
+
+---
+
+# 🔄 Money Transfer
+
+Money transfers are handled using a **database transaction**.
+
+The transfer consists of two operations:
+
+1. Debit money from the sender.
+2. Credit money to the receiver.
+
+Both operations must succeed.
+
+```text
+             Start Transaction
+                    │
+                    ▼
+             Validate Receiver
+                    │
+                    ▼
+              Check Balance
+                    │
+                    ▼
+             Debit Sender
+                    │
+                    ▼
+            Credit Receiver
+                    │
+                    ▼
+          Create Transactions
+                    │
+              ┌─────┴─────┐
+              │           │
+           Success       Failure
+              │           │
+              ▼           ▼
+           COMMIT      ROLLBACK
 ```
 
 The application uses:
@@ -222,55 +246,91 @@ The application uses:
 connection.setAutoCommit(false);
 ```
 
-and then either:
+and completes the operation using:
 
 ```java
 connection.commit();
 ```
 
-or:
+If an error occurs:
 
 ```java
 connection.rollback();
 ```
 
-This prevents a situation where money is deducted from one account but not credited to the other.
+This prevents an inconsistent state where money is deducted from the sender but not credited to the receiver.
 
 ---
 
-# 🔐 Password Security
+# 📋 Transaction History
 
-Passwords are not stored directly as plain text.
+The application maintains transaction records for banking operations.
 
-The project uses **BCrypt hashing**:
+A transaction contains information such as:
+
+```text
+Transaction ID
+Transaction Type
+Description
+Date / Time
+Amount
+```
+
+Example:
+
+```text
+ID          TYPE       DESCRIPTION              DATE                    AMOUNT
+------------------------------------------------------------------------------------------------
+566204981   CREDIT     ATM DEPOSIT              2026-09-09T23:32:42     1000.00
+688460976   DEBIT      MONEY TRANSFER           2026-09-09T23:23:21       10.00
+```
+
+Transaction records are associated with the corresponding bank account, allowing users to view their own transaction history.
+
+---
+
+# 🔐 Authentication & Password Security
+
+Passwords are **not stored as plain text**.
+
+The application uses **BCrypt hashing** to securely store passwords.
 
 ```text
 User Password
       │
       ▼
- BCrypt Hash
+ BCrypt Hashing
       │
       ▼
-Database
+Stored Password Hash
+      │
+      ▼
+    MySQL
 ```
 
-During login, the entered password is compared against the stored BCrypt hash.
+During login, the entered password is verified against the stored BCrypt hash.
+
+---
+
+# 📧 Email Validation
+
+The application validates the email address provided during account creation or email updates.
+
+Invalid email formats are rejected before the account information is stored.
 
 ---
 
 # 🔒 Environment Variables
 
-Database credentials should not be hardcoded into the source code.
+Database credentials are kept outside the source code using environment variables.
 
-The application reads:
+The application uses:
 
 ```text
 DB_URL
 DB_USERNAME
 DB_PASSWORD
 ```
-
-from environment variables.
 
 Example:
 
@@ -280,57 +340,258 @@ DB_USERNAME=root
 DB_PASSWORD=your_password
 ```
 
-> Never commit your real database password or `.env` file containing secrets to GitHub.
+> ⚠️ Never commit real database credentials or `.env` files containing secrets to GitHub.
 
 ---
 
-# 🗄️ Database Setup
+# 🗄️ Database
 
-## 1. Install MySQL
+The application uses **MySQL** as its relational database.
 
-Install MySQL Server and make sure the MySQL service is running.
+The database stores information related to:
 
-## 2. Create the database
-
-```sql
-CREATE DATABASE bank_management;
+```text
+Accounts
+Transactions
 ```
 
-Select the database:
+Typical account information includes:
 
-```sql
-USE bank_management;
+```text
+Account ID
+Account Number
+Account Holder Name
+Email
+Password Hash
+Balance
 ```
 
-Create the required `accounts` table according to the SQL structure used by the project.
+Transaction information includes:
 
-> Keep database credentials outside the repository.
+```text
+Transaction ID
+Account ID
+Transaction Type
+Amount
+Description
+Created At
+```
+
+---
+
+# 📦 Model Layer
+
+## `Account.java`
+
+Represents a bank account and contains account-related information.
+
+```text
+Account
+├── ID
+├── Account Number
+├── Account Holder Name
+├── Email
+├── Password Hash
+└── Balance
+```
+
+## `Transaction.java`
+
+Represents a banking transaction.
+
+```text
+Transaction
+├── Transaction ID
+├── Account ID
+├── Type
+├── Amount
+├── Description
+└── Created At
+```
+
+---
+
+# 🗄️ DAO Layer
+
+The DAO layer is responsible for communication with the MySQL database.
+
+### `AccountDAO.java`
+
+Handles account-related database operations such as:
+
+```text
+Create Account
+Find Account
+Update Account
+Update Balance
+Change Password
+Delete Account
+```
+
+### `TransactionDAO.java`
+
+Handles transaction-related database operations such as:
+
+```text
+Create Transaction
+Fetch Transaction History
+Store Transaction Details
+```
+
+Using DAO classes keeps database logic separate from business logic.
+
+---
+
+# ⚙️ Service Layer
+
+### `BankService.java`
+
+The Service Layer contains the application's core business logic.
+
+Examples include:
+
+```text
+Register Account
+Login
+Deposit
+Withdraw
+Transfer Money
+View Account Details
+Update Account
+Change Password
+Close Account
+View Transaction History
+```
+
+The Service Layer acts as the bridge between the Dashboard and DAO layer.
+
+---
+
+# 🔧 Utility Classes
+
+### `ConnectionManager.java`
+
+Creates and manages JDBC connections to the MySQL database.
+
+Database credentials are loaded from environment variables.
+
+### `PasswordUtil.java`
+
+Provides password hashing and password verification using BCrypt.
+
+### `NumberGenerator.java`
+
+Generates account numbers for newly created accounts.
+
+---
+
+# 📸 Screenshots
+
+### 👤 Account Creation
+
+<img src="screenshots/account-creation.png" width="700">
+
+### 🏦 Dashboard
+
+<img src="screenshots/dashboard.png" width="700">
+
+### 📋 Account Details
+
+<img src="screenshots/account-details.png" width="700">
+
+### 💰 Deposit
+
+<img src="screenshots/deposit.png" width="700">
+
+---
+
+# 🧠 Concepts Demonstrated
+
+## Java
+
+* Object-Oriented Programming
+* Encapsulation
+* Classes & Objects
+* Constructors
+* Methods
+* Interfaces
+* Exception Handling
+* Collections
+
+## JDBC
+
+* `Connection`
+* `PreparedStatement`
+* `ResultSet`
+* `executeQuery()`
+* `executeUpdate()`
+* JDBC connection management
+* Parameterized SQL queries
+
+## MySQL
+
+* Relational database design
+* CRUD operations
+* SQL queries
+* Primary keys
+* Foreign keys
+* Database constraints
+* Transactions
+* `COMMIT`
+* `ROLLBACK`
+
+## Backend Architecture
+
+* Layered Architecture
+* DAO Pattern
+* Service Layer
+* Model Layer
+* Separation of Concerns
+
+## Security
+
+* BCrypt password hashing
+* Prepared statements
+* Environment variables
+* Input validation
 
 ---
 
 # ▶️ How to Run
 
-### 1. Clone the repository
+## 1. Clone the Repository
 
 ```bash
 git clone https://github.com/AnkitSirsatia/Bank_Management_System.git
 ```
 
-### 2. Open the project
+```bash
+cd Bank_Management_System
+```
 
-Open the project in your preferred Java IDE such as:
+## 2. Configure MySQL
 
-* IntelliJ IDEA
-* Eclipse
-* VS Code
+Make sure MySQL Server is installed and running.
 
-### 3. Configure MySQL
+Create the database:
 
-Make sure MySQL is running and the required database/table are created.
+```sql
+CREATE DATABASE bank_management;
+```
 
-### 4. Configure environment variables
+Select it:
 
-Set:
+```sql
+USE bank_management;
+```
+
+Create the required tables using the SQL structure required by the project.
+
+---
+
+## 3. Configure Environment Variables
+
+Set the following environment variables:
 
 ```text
 DB_URL
@@ -338,16 +599,27 @@ DB_USERNAME
 DB_PASSWORD
 ```
 
-according to your local MySQL configuration.
+Example:
 
-### 5. Add the required JDBC/BCrypt dependencies
+```text
+DB_URL=jdbc:mysql://localhost:3306/bank_management
+DB_USERNAME=root
+DB_PASSWORD=your_password
+```
+
+---
+
+## 4. Add Dependencies
 
 Make sure the project has the required:
 
 * MySQL JDBC Driver
 * BCrypt library
+* Email Validator
 
-### 6. Run the application
+---
+
+## 5. Run the Application
 
 Run:
 
@@ -355,124 +627,84 @@ Run:
 Main.java
 ```
 
-The console application will display the banking menu.
+The console application will display the main banking menu.
 
 ---
 
 # 📋 Application Flow
 
 ```text
-Start Application
-       │
-       ▼
-Main Menu
-       │
-   ┌───┴───────────┐
-   │               │
-   ▼               ▼
-Create Account    Login
-                     │
-                     ▼
-              Account Dashboard
-                     │
-       ┌─────────────┼─────────────┐
-       │             │             │
-       ▼             ▼             ▼
-    Deposit       Withdraw      Transfer
-       │             │             │
-       └─────────────┼─────────────┘
-                     ▼
-                MySQL Database
+                 Start Application
+                         │
+                         ▼
+                    Main Menu
+                         │
+              ┌──────────┴──────────┐
+              │                     │
+              ▼                     ▼
+       Create Account              Login
+                                    │
+                                    ▼
+                           Account Dashboard
+                                    │
+          ┌──────────┬──────────────┼─────────────┐
+          │          │              │             │
+          ▼          ▼              ▼             ▼
+       Deposit    Withdraw       Transfer    Transaction
+                                               History
+          │          │              │             │
+          └──────────┴──────────────┼─────────────┘
+                                    │
+                                    ▼
+                              MySQL Database
 ```
-
----
-
-# 🧠 Concepts Demonstrated
-
-This project was created to practice practical backend development concepts.
-
-### Java
-
-* OOP
-* Encapsulation
-* Classes & Objects
-* Constructors
-* Methods
-* Exception Handling
-* Collections
-* Interfaces
-
-### JDBC
-
-* `Connection`
-* `PreparedStatement`
-* `ResultSet`
-* `executeQuery()`
-* `executeUpdate()`
-* SQL queries
-* Connection management
-
-### Database
-
-* MySQL
-* CRUD operations
-* SQL transactions
-* `COMMIT`
-* `ROLLBACK`
-* Database constraints
-
-### Backend Architecture
-
-* Model Layer
-* DAO Pattern
-* Service Layer
-* Separation of concerns
-
-### Security
-
-* BCrypt password hashing
-* Environment variables
-* Prepared statements
 
 ---
 
 # 🚧 Future Improvements
 
-The current project is a learning-focused console application. Planned improvements include:
-
-* [ ] Transaction history
-* [ ] Improved input validation
-* [ ] Better exception handling
-* [ ] `BigDecimal` for monetary calculations
-* [ ] Stronger database constraints
-* [ ] Unit testing with JUnit
-* [ ] Logging
-* [ ] Improved account-number generation
-* [ ] Maven project setup
-* [ ] Spring Boot REST API
-* [ ] JWT authentication
-* [ ] Web/mobile frontend
-* [ ] API documentation with Swagger/OpenAPI
+* [ ] Convert the application into a Spring Boot REST API
+* [ ] Replace JDBC DAO implementation with Spring Data JPA
+* [ ] Add JWT-based authentication
+* [ ] Add JUnit and integration testing
+* [ ] Add structured logging
+* [ ] Improve input validation and exception handling
+* [ ] Use `BigDecimal` for monetary calculations
+* [ ] Add stronger database constraints
+* [ ] Add API documentation using Swagger/OpenAPI
+* [ ] Build a web frontend
+* [ ] Add mobile/web-based banking interface
+* [ ] Deploy the backend to the cloud
 
 ---
 
-# 🎯 Learning Goals
+# 🎯 Project Objective
 
-The main goal of this project is to understand how a Java application communicates with a relational database and how backend applications can be structured using different layers.
+The main objective of this project was to build a practical Java backend application while understanding how different backend components work together.
 
 ```text
 Java
- ↓
+  ↓
 JDBC
- ↓
+  ↓
 DAO
- ↓
+  ↓
 Service Layer
- ↓
+  ↓
 MySQL
 ```
 
-The project also provides practical experience with **database transactions and backend security concepts**.
+The project provided hands-on experience with:
+
+* Backend architecture
+* Database connectivity
+* SQL
+* Authentication
+* Password security
+* CRUD operations
+* Database transactions
+* Business logic
+* Data access patterns
 
 ---
 
@@ -487,4 +719,4 @@ https://github.com/AnkitSirsatia
 
 # 📄 License
 
-This project is created for **educational and learning purposes**.
+This project was created for **educational and learning purposes**.
