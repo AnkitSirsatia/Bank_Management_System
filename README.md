@@ -485,25 +485,6 @@ Generates account numbers for newly created accounts.
 
 ---
 
-# 📸 Screenshots
-
-### 👤 Account Creation
-
-<img src="screenshots/account-creation.png" width="700">
-
-### 🏦 Dashboard
-
-<img src="screenshots/dashboard.png" width="700">
-
-### 📋 Account Details
-
-<img src="screenshots/account-details.png" width="700">
-
-### 💰 Deposit
-
-<img src="screenshots/deposit.png" width="700">
-
----
 
 # 🧠 Concepts Demonstrated
 
