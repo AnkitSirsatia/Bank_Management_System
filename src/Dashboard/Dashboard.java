@@ -1,23 +1,28 @@
 package Dashboard;
 
 import DAO.AccountDAO;
+import DAO.TransactionDAO;
 import Model.Account;
 import Service.BankService;
+import Util.ConnectionManager;
 import Util.EmailVerify;
 import Util.PasswordUtil;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Dashboard {
     private final  BankService bankService;
     private final AccountDAO  accountDAO;
+    private final TransactionDAO transactionDAO;
     private Account account;
     private final Scanner scanner;
 
-    public Dashboard(BankService bankService,Scanner scanner,AccountDAO accountDAO){
+    public Dashboard(BankService bankService,Scanner scanner,AccountDAO accountDAO,TransactionDAO transactionDAO){
         this.bankService=bankService;
         this.scanner = scanner;
         this.accountDAO = accountDAO;
+        this.transactionDAO = transactionDAO;
     }
 
 
@@ -65,10 +70,13 @@ public class Dashboard {
         double amount = scanner.nextDouble();
         scanner.nextLine();
         if(amount>0) {
+            try{
             if (bankService.withdraw(account, amount, account.getPassword())) {
                 System.out.println("Withdraw " + amount + " successfully ");
             } else {
                 System.out.println("Withdraw failed");
+            }} catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }else {
             System.out.println("Enter Invalid Amount");
@@ -83,10 +91,13 @@ public class Dashboard {
         double amount = scanner.nextDouble();
         scanner.nextLine();
         if(amount>0) {
+            try{
             if (bankService.deposit(account, amount, account.getPassword())) {
                 System.out.println("Deposit " + amount + " successfully ");
             } else {
                 System.out.println("Deposit failed");
+            }} catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }else {
             System.out.println("Enter Invalid Amount");
@@ -182,6 +193,19 @@ public class Dashboard {
         }
     }
 
+public void transactionHistory(){
+        try{
+            if(bankService.displayTransaction(account.getAccountNumber())){
+                System.out.println("Transactions fetched till today's date");
+            }else{
+                System.out.println("Cannot fetch Transaction details");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+}
+
     public void showMenu() {
 
         while (true) {
@@ -199,8 +223,8 @@ public class Dashboard {
             System.out.println("5. Transaction History");
             System.out.println("6. Account Details");
             System.out.println("7. Change Password");
-            System.out.println("9. Transfer Money");
-            System.out.println("8. Logout");
+            System.out.println("8. Transfer Money");
+            System.out.println("9. Logout");
             System.out.println("========================================");
 
             System.out.print("Enter your choice: ");
@@ -225,7 +249,7 @@ public class Dashboard {
                     break;
 
                 case 5:
-                    //transactionHistory();
+                    transactionHistory();
                     break;
 
                 case 6:
@@ -236,11 +260,11 @@ public class Dashboard {
                     changePassword();
                     break;
 
-                case 9:
+                case 8:
                     transferMoney();
                     break;
 
-                case 8:
+                case 9:
                     System.out.println("Logged out successfully.");
                     return;
 

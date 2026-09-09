@@ -27,4 +27,14 @@ public class NumberGenerator {
         idNumber.add(id);
         return id;
     }
+
+    static Set<Long> transactionIDNumber = new HashSet<>();
+    public static long generateTransIdNumber(){
+        long id;
+        do {
+            id = 100000000+ (long) random.nextInt(900000000);
+        }while(idNumber.contains(id));
+        idNumber.add(id);
+        return id;
+    }
 }

@@ -1,14 +1,16 @@
 
 import DAO.AccountDAO;
+import DAO.TransactionDAO;
 import Dashboard.Dashboard;
 import Service.BankService;
 
 
 void main() {
     Scanner scanner = new Scanner(System.in);
+    TransactionDAO transactionDAO = new TransactionDAO();
     AccountDAO accountDAO = new AccountDAO();
-    BankService bankService = new BankService(scanner,accountDAO);
-    Dashboard dashboard = new Dashboard(bankService,scanner,accountDAO);
+    BankService bankService = new BankService(scanner,accountDAO,transactionDAO);
+    Dashboard dashboard = new Dashboard(bankService,scanner,accountDAO,transactionDAO);
     try {
         while (true) {
             System.out.println("Press 1 : Login\nPress 2 : Create Account\nPress 3 : Logout");

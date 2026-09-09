@@ -1,24 +1,28 @@
 package Service;
 
 import DAO.AccountDAO;
+import DAO.TransactionDAO;
 import Model.Account;
+import Model.Transaction;
 import Util.ConnectionManager;
 import Util.EmailVerify;
 import Util.NumberGenerator;
 import Util.PasswordUtil;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Scanner;
 
 public class BankService {
     private final AccountDAO accountDAO;
     private final Scanner scanner;
-    public BankService(Scanner scanner,AccountDAO accountDAO){
+    private final TransactionDAO transactionDAO;
+
+    public BankService(Scanner scanner, AccountDAO accountDAO, TransactionDAO transactionDAO){
         this.scanner=scanner;
         this.accountDAO = accountDAO;
+        this.transactionDAO=transactionDAO;
+
     }
 
     public boolean registerAccount(String accountHolderName, String email, String password){
@@ -35,7 +39,6 @@ public class BankService {
             return false;
         }
     }
-
 
     public boolean getAccount(int accountNumber){
         Account account = accountDAO.findAccountByNumber(accountNumber);
@@ -76,7 +79,7 @@ public class BankService {
         return current_balance;
     }
 
-    public boolean withdraw(Account account,double amount,String password ){
+    public boolean withdraw(Account account,double amount,String password ) throws SQLException {
         if(!accountDAO.isSufficient(account.getAccountNumber(),amount)){
             System.out.println("Insufficient Bank Balance");
             return false;
@@ -85,16 +88,18 @@ public class BankService {
         if(account.getPassword().equals(password)){
             accountDAO.updateBalance(account.getAccountNumber(),newAmount);
             account.setBalance(newAmount);
+            transactionDAO.saveTransaction(ConnectionManager.getConnection(), (int) NumberGenerator.generateTransIdNumber(),account.getAccountNumber(),"DEBIT",amount,"ATM WITHDRAW");
             return true;
         }
        return false;
     }
 
-    public boolean deposit(Account account,double amount,String password){
+    public boolean deposit(Account account,double amount,String password) throws SQLException {
         double newAmount = account.getBalance()+ amount;
         if(account.getPassword().equals(password)){
             accountDAO.updateBalance(account.getAccountNumber(),newAmount);
             account.setBalance(newAmount);
+            transactionDAO.saveTransaction(ConnectionManager.getConnection(), (int) NumberGenerator.generateTransIdNumber(),account.getAccountNumber(),"CREDIT",amount,"ATM DEPOSIT");
             return true;
         }
         return false;
@@ -102,6 +107,8 @@ public class BankService {
 
     // money transfer
     public boolean transferMoney(int senderAccountNo ,int receiverAccountNo,double amount){
+        Account senderAccount = accountDAO.findAccountByNumber(senderAccountNo);
+        Account receiverAccount = accountDAO.findAccountByNumber(receiverAccountNo);
         String debit ="UPDATE accounts SET balance = balance - ? WHERE account_number = ?";
         String credit ="UPDATE accounts SET balance = balance + ? WHERE account_number = ?";
         try(Connection connection = ConnectionManager.getConnection();
@@ -127,6 +134,8 @@ public class BankService {
             int receiverRows = receiver.executeUpdate();
             if(senderRows==1 && receiverRows==1){
                 connection.commit();
+                transactionDAO.saveTransaction(ConnectionManager.getConnection(),(int) NumberGenerator.generateTransIdNumber(),senderAccount.getAccountNumber(),"DEBIT",amount,"MONEY TRANSFER "+senderAccount.getAccountHolderName()+" TO "+receiverAccount.getAccountHolderName());
+                transactionDAO.saveTransaction(ConnectionManager.getConnection(),(int) NumberGenerator.generateTransIdNumber(),receiverAccount.getAccountNumber(),"CREDIT",amount,"MONEY RECEIVES TO "+receiverAccount.getAccountHolderName()+" FROM "+senderAccount.getAccountHolderName());
                 System.out.println("Transaction is Successful");
                 return true;
             }else {
@@ -235,6 +244,26 @@ public class BankService {
             System.out.println("Data not found");
         }
         return false;
+    }
+
+    public boolean displayTransaction(int accountNumber) throws SQLException {
+        boolean value = false;
+        Account account = accountDAO.findAccountByNumber(accountNumber);
+        List<Transaction> transactionList = transactionDAO.getTransactionsByAccount(ConnectionManager.getConnection(),account.getAccountNumber());
+        System.out.println("--------------------------------------------------------------------------------------------------------------");
+        System.out.println("   ID             TYPE             AMOUNT             DATE               DESCRIPTION                              ");
+        System.out.println("--------------------------------------------------------------------------------------------------------------");
+        for(Transaction transaction : transactionList){
+            int ID = Math.toIntExact(transaction.getId());
+            String TYPE  = transaction.getType();
+            double AMOUNT = transaction.getAmount();
+            String DESC = transaction.getDescription();
+            LocalDateTime DATE = transaction.getCreatedAt();
+            System.out.printf("%-10d       %-10s       %-10.2f   %-22s   %-50s%n",ID,TYPE,AMOUNT,DATE,DESC);
+            value=true;
+        }
+        System.out.println("--------------------------------------------------------------------------------------------------------------");
+        return value;
     }
 
 }
